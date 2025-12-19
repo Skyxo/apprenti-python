@@ -1,0 +1,285 @@
+{
+  "xp": 97,
+  "streak": 0,
+  "last_played_date": "2025-12-19",
+  "cards": [
+    {
+      "id": 1,
+      "question": "Le matériau constituant les fibres majoritairement utilisées pour le renfort des composites (> 90%) est :",
+      "options": [
+        {
+          "text": "Le polyamide",
+          "is_correct": false
+        },
+        {
+          "text": "Le verre E",
+          "is_correct": true
+        },
+        {
+          "text": "L'acier",
+          "is_correct": false
+        },
+        {
+          "text": "Le carbone",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.6,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 2,
+      "question": "Les courbes module de cisaillement en fonction de la température d'une résine époxy polymérisée à la même température mais pour des temps de cuisson différents tels que $t_{1} < t_{2} < t_{3}$ sont données ci-dessous. Associer chaque temps à une courbe :",
+      "options": [
+        {
+          "text": "$t_{1}$ : courbe 1 ; $t_{2}$ : courbe 2 ; $t_{3}$ : courbe 3",
+          "is_correct": true
+        },
+        {
+          "text": "$t_{1}$ : courbe 3 ; $t_{2}$ : courbe 2 ; $t_{3}$ : courbe 1",
+          "is_correct": false
+        },
+        {
+          "text": "Impossible car normalement les variations devraient être identiques",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.6,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 3,
+      "question": "Le phénomène de gélification des systèmes thermodurcissables est associé (2 réponses correctes) :",
+      "options": [
+        {
+          "text": "À la formation d'une molécule « infinie »",
+          "is_correct": true
+        },
+        {
+          "text": "À la fin de la réaction du processus de polymérisation",
+          "is_correct": false
+        },
+        {
+          "text": "Au maximum de la température de la réaction",
+          "is_correct": false
+        },
+        {
+          "text": "À la transition vitreuse",
+          "is_correct": false
+        },
+        {
+          "text": "À l'apparition d'une réponse élastique",
+          "is_correct": true
+        },
+        {
+          "text": "Au moment où le polymère cristallise",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 4,
+      "question": "Quel polymère a la température de fusion la plus élevée :",
+      "options": [
+        {
+          "text": "La résine polyester",
+          "is_correct": false
+        },
+        {
+          "text": "La résine époxy",
+          "is_correct": false
+        },
+        {
+          "text": "Aucun des deux car ils ne présentent pas de température de fusion",
+          "is_correct": true
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.36,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 5,
+      "question": "La température de fusion du polypropylène :",
+      "options": [
+        {
+          "text": "Se situe aux alentours de $120^{\\circ}C$",
+          "is_correct": false
+        },
+        {
+          "text": "Se situe aux alentours de $170^{\\circ}C$",
+          "is_correct": true
+        },
+        {
+          "text": "N'existe pas",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 6,
+      "question": "Le polystyrène est :",
+      "options": [
+        {
+          "text": "Un thermoplastique amorphe",
+          "is_correct": true
+        },
+        {
+          "text": "Un thermoplastique semi-cristallin",
+          "is_correct": false
+        },
+        {
+          "text": "Un thermodurcissable",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 7,
+      "question": "Les modules dans le sens des fibres, $E_{L}$ et perpendiculairement aux fibres, $E_{T}$ d'un composite unidirectionnel époxy ($E=3,2~GPa$) / verre ($E=73~GPa$) avec une fraction volumique de 50% sont :",
+      "options": [
+        {
+          "text": "$E_{L} \\approx 38~GPa$ et $E_{T} \\approx 6~GPa$",
+          "is_correct": true
+        },
+        {
+          "text": "$E_{L} \\approx 20~GPa$ et $E_{T} \\approx 6~GPa$",
+          "is_correct": false
+        },
+        {
+          "text": "$E_{L} = E_{T} \\approx 38~GPa$",
+          "is_correct": false
+        },
+        {
+          "text": "$E_{L} = E_{T} \\approx 6~GPa$",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.36,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 8,
+      "question": "La chute de module d'un polymère entre le plateau vitreux et le plateau caoutchoutique :",
+      "options": [
+        {
+          "text": "Est plus grande dans le cas d'un polymère semi-cristallin",
+          "is_correct": false
+        },
+        {
+          "text": "Peut varier de plus de 4 décades",
+          "is_correct": true
+        },
+        {
+          "text": "Est liée à la destruction des liaisons faibles entre les chaînes macromoléculaires",
+          "is_correct": true
+        },
+        {
+          "text": "Est liée à la fusion du matériau",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 0,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 9,
+      "question": "La vitesse de cristallisation d'un polymère en fonction de la température :",
+      "options": [
+        {
+          "text": "Augmente de façon continue",
+          "is_correct": false
+        },
+        {
+          "text": "Diminue de façon continue",
+          "is_correct": false
+        },
+        {
+          "text": "Passe par un maximum",
+          "is_correct": true
+        },
+        {
+          "text": "N'évolue pas",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 10,
+      "question": "Le MFI (melt flow index) permet de mesurer pour un polymère :",
+      "options": [
+        {
+          "text": "La viscosité à l'état fondu",
+          "is_correct": true
+        },
+        {
+          "text": "La température de transition vitreuse",
+          "is_correct": false
+        },
+        {
+          "text": "La contrainte à rupture",
+          "is_correct": false
+        },
+        {
+          "text": "Le module",
+          "is_correct": false
+        }
+      ],
+      "interval": 1,
+      "repetitions": 0,
+      "easiness_factor": 2.5,
+      "next_review_date": "2025-12-20"
+    },
+    {
+      "id": 11,
+      "question": "Le polypropylène isotactique industriel a une masse volumique $\\rho~(g/cm^{3})$ :",
+      "options": [
+        {
+          "text": "$1,009 \\le \\rho \\le 1,025$",
+          "is_correct": false
+        },
+        {
+          "text": "$1,127 \\le \\rho \\le 1,254$",
+          "is_correct": false
+        },
+        {
+          "text": "$= 1,2$",
+          "is_correct": false
+        },
+        {
+          "text": "$0,834 \\le \\rho \\le 0,946$",
+          "is_correct": true
+        }
+      ],
+      "interval": 1,
+      "repetitions": 1,
+      "easiness_factor": 2.6,
+      "next_review_date": "2025-12-20"
+    }
+  ]
+}
