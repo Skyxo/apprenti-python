@@ -17,26 +17,32 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 REM Se placer dans le dossier du script pour eviter les erreurs de chemin
-cd /d "%~dp0"
+REM Utilisation de pushd pour supporter les chemins UNC (ex: \\wsl.localhost\...)
+pushd "%~dp0"
 
 ECHO [1/2] Construction de l'image (cela peut prendre un moment la premiere fois)...
 docker build -t anki-polymere-app .
 
 ECHO.
 ECHO [2/2] Lancement de l'application...
-ECHO Vos donnees seront sauvegardees dans ce dossier.
+ECHO Une fois lance, ouvrez votre navigateur a l'adresse : http://localhost:8501
+ECHO Vos donnees seront sauvegardees dans le dossier 'data'.
+ECHO.
+ECHO Pour arreter le serveur, faites Ctrl+C dans cette fenetre.
 ECHO.
 
-REM Creer le fichier json vide s'il n'existe pas pour eviter que Docker ne cree un dossier a la place
-IF NOT EXIST "polymere_data.json" (
-    ECHO {} > "polymere_data.json"
+REM On cree le dossier de donnees local s'il n'existe pas
+IF NOT EXIST "data" (
+    MKDIR "data"
 )
 
 REM On lance le conteneur en interactif (-it)
 REM On supprime le conteneur apres execution (--rm)
-REM On monte le fichier JSON actuel pour la persistance (-v)
-docker run -it --rm -v "%cd%\polymere_data.json:/app/polymere_data.json" anki-polymere-app
+REM On monte le dossier data pour la persistance (-v)
+REM On mappe le port 8501 pour acceder a l'interface web (-p)
+docker run -it --rm -v "%cd%\data:/app/data" -p 8501:8501 anki-polymere-app
 
 ECHO.
 ECHO Application fermee.
+popd
 PAUSE

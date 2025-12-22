@@ -1,27 +1,17 @@
 import json
 import re
 import os
-import sys
 import datetime
 import math
 import random
 from dataclasses import dataclass, field, asdict
 from typing import List, Optional, Dict
 
-try:
-    from rich.console import Console
-    from rich.panel import Panel
-    from rich.markdown import Markdown
-    from rich.layout import Layout
-    from rich.prompt import Prompt
-    from rich.table import Table
-    from rich import print as rprint
-except ImportError:
-    print("Error: 'rich' library is not installed. Please install it with 'pip install rich'")
-    sys.exit(1)
-
 # --- CONFIGURATION ---
-DATA_FILE = "polymere_data.json"
+DATA_DIR = "data"
+DATA_FILE = os.path.join(DATA_DIR, "polymere_data.json")
+
+# This raw data is kept here for fallback initialization
 RAW_DATA = r"""
 TP Polymères et Composites - Questions Autonomie
 
@@ -221,15 +211,30 @@ class CustomEncoder(json.JSONEncoder):
             return obj.__dict__
         return super().default(obj)
 
+def ensure_data_dir():
+    try:
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
+    except OSError:
+        # In case of permission error or weird state
+        pass
+
 def save_state(state: UserState):
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(asdict(state), f, ensure_ascii=False, indent=2)
+    ensure_data_dir()
+    try:
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(asdict(state), f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error saving state: {e}")
 
 def load_state() -> UserState:
+    ensure_data_dir()
     if not os.path.exists(DATA_FILE):
-        rprint("[yellow]Fichier de sauvegarde non trouvé. Initialisation des données...[/yellow]")
         cards = parse_raw_data(RAW_DATA)
-        return UserState(cards=cards)
+        # Create initial state
+        new_state = UserState(cards=cards)
+        save_state(new_state)
+        return new_state
     
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
@@ -249,110 +254,5 @@ def load_state() -> UserState:
             cards=cards
         )
     except Exception as e:
-        rprint(f"[red]Erreur lors du chargement : {e}. Réinitialisation.[/red]")
+        print(f"Error loading state: {e}. Reinitializing.")
         return UserState(cards=parse_raw_data(RAW_DATA))
-
-# --- UI & LOGIC ---
-
-console = Console()
-
-def display_stats(state: UserState):
-    level = state.get_level()
-    console.print(Panel(
-        f"[bold blue]Niveau : {level}[/bold blue] | [yellow]XP : {state.xp}[/yellow] | [red]Série : {state.streak} jours[/red]",
-        title="Stats Joueur", 
-        border_style="green"
-    ))
-
-def run_quiz(state: UserState):
-    due_cards = [c for c in state.cards if c.is_due()]
-    
-    if not due_cards:
-        console.print(Panel(":tada: [bold green]Félicitations ! Vous avez tout révisé pour aujourd'hui.[/bold green] :tada:", border_style="green"))
-        return
-
-    random.shuffle(due_cards)
-    state.update_streak()
-    
-    console.print(f"[bold]Cartes à réviser aujourd'hui : {len(due_cards)}[/bold]\n")
-
-    for card in due_cards:
-        console.clear()
-        display_stats(state)
-        
-        # Display Question
-        console.print(Panel(Markdown(f"## {card.question}"), title=f"Question {card.id}", border_style="cyan"))
-        
-        # Display Options
-        correct_indices = [i for i, opt in enumerate(card.options) if opt.is_correct]
-        options_map = {}
-        for idx, option in enumerate(card.options):
-            letter = chr(65 + idx) # A, B, C...
-            options_map[letter] = idx
-            console.print(f"  [bold cyan]{letter})[/bold cyan] {option.text}")
-        
-        # Determine strictness of input based on number of correct answers
-        is_multi_select = len(correct_indices) > 1
-        prompt_text = "Votre réponse (ex: A, ou AB pour plusieurs)" if is_multi_select else "Votre réponse (ex: A)"
-        
-        start_time = datetime.datetime.now()
-        user_input = Prompt.ask(f"\n[bold yellow]{prompt_text}[/bold yellow]").upper().strip()
-        end_time = datetime.datetime.now()
-        duration = (end_time - start_time).seconds
-        
-        # Validate Input
-        user_indices = []
-        for char in user_input:
-            if char in options_map:
-                user_indices.append(options_map[char])
-        
-        # Sort for comparison
-        user_indices.sort()
-        correct_indices.sort()
-        
-        is_correct = (user_indices == correct_indices)
-        
-        # Feedback & XP
-        if is_correct:
-            # Calculate XP: Base 10 + Speed bonus (max 5)
-            speed_bonus = max(0, 5 - duration)
-            xp_gain = 10 + speed_bonus
-            state.xp += xp_gain
-            
-            console.print(Panel(f"[bold green]CORRECT ![/bold green]\n+ {xp_gain} XP", border_style="green"))
-            
-            # Ask for self-evaluation for SM-2
-            quality = 3 # Default pass
-            # Simple mapping for user simplicity: 
-            # If quick -> 5 (easy), if slow -> 3 (hard but correct)
-            if duration < 5: quality = 5
-            elif duration < 15: quality = 4
-            else: quality = 3
-            
-            card.update_sm2(quality)
-            
-        else:
-            correct_letters = "".join([chr(65+i) for i in correct_indices])
-            console.print(Panel(f"[bold red]INCORRECT ![/bold red]\nLa bonne réponse était : [bold]{correct_letters}[/bold]", border_style="red"))
-            card.update_sm2(0) # Fail
-            
-        save_state(state)
-        Prompt.ask("\n[dim]Appuyez sur Entrée pour continuer...[/dim]")
-
-    console.clear()
-    display_stats(state)
-    console.print(Panel(":sparkles: [bold green]Session terminée ! À demain.[/bold green] :sparkles:", border_style="green"))
-
-def main():
-    console.print(Panel("[bold magenta]Bienvenue dans Anki Polymères CLI[/bold magenta]", subtitle="Apprendre par répétition espacée"))
-    
-    state = load_state()
-    display_stats(state)
-    
-    if Prompt.ask("Prêt à réviser ?", choices=["o", "n"], default="o") == "o":
-        run_quiz(state)
-    else:
-        console.print("Au revoir !")
-
-if __name__ == "__main__":
-    main()

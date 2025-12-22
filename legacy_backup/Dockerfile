@@ -11,9 +11,12 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copier le code source
-COPY anki_polymere.py .
-# On copie aussi le json par défaut au cas où, mais il sera monté par volume idéalement
-COPY polymere_data.json .
+COPY backend.py .
+COPY app.py .
 
 # Commande par défaut pour lancer l'application
-ENTRYPOINT ["python", "anki_polymere.py"]
+# Exposer le port par defaut de Streamlit
+EXPOSE 8501
+
+# Commande par défaut pour lancer l'application Streamlit
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.address=0.0.0.0"]

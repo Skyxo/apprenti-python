@@ -1,32 +1,66 @@
-# Anki Polymères CLI (Version Docker)
+# 🎓 FlashTOEFL - Cramming Assistant
 
-Une application de révision par répétition espacée (type Anki) pour le cours de Polymères et Composites, fonctionnant dans un conteneur Docker pour une installation facile.
+**FlashTOEFL** est une application web progressive (PWA) conçue pour l'apprentissage accéléré du vocabulaire avant le TOEFL. Elle utilise un algorithme de répétition espacée optimisé pour des sessions courtes (7 jours).
 
-## Prérequis
+![Aperçu de l'application](https://via.placeholder.com/800x400?text=FlashTOEFL+Preview)
 
-1.  **Docker Desktop** doit être installé sur votre machine.
-    *   [Télécharger Docker Desktop pour Windows/Mac/Linux](https://www.docker.com/products/docker-desktop/)
+## 🚀 Fonctionnalités Clés
 
-## Installation & Lancement (Windows)
+- **⚡ Algorithme "Cram Mode"** : Intervalles ultra-courts (1 min, 10 min, 4h) pour maximiser la rétention sur 7 jours.
+- **🔄 Génération Intelligente de Cartes** : À partir d'une simple ligne CSV, l'application génère 3 variantes pédagogiques :
+    1.  **Contexte (Cloze)** : Phrase à trou (Le plus efficace).
+    2.  **Définition** : Anglais → Mot Cible.
+    3.  **Traduction** : Français → Mot Cible.
+- **📱 Mobile First** : Interface fluide et gestuelle pensée pour smartphone.
+- **💾 100% Offline** : Vos données sont stockées localement dans votre navigateur.
 
-1.  Dézippez le dossier du projet ou clonez-le.
-2.  Assurez-vous que Docker Desktop est lancé.
-3.  Double-cliquez sur le fichier `start.bat`.
+## 🛠️ Installation & Démarrage
 
-Une fenêtre noire va s'ouvrir, construire l'application automatiquement et la lancer. Vos progrès (XP, cartes, séries) seront sauvegardés automatiquement dans le fichier `polymere_data.json` situé dans le même dossier.
+### Prérequis
+- `Node.js` (v18+)
+- `npm`
 
-## Lancement Manuel (Linux / Mac / Expert)
+### Installation
+```bash
+# Installer les dépendances
+npm install
 
-Si vous préférez utiliser le terminal :
+# Lancer le serveur de développement
+npm run dev -- --host
+```
 
-1.  **Construire l'image :**
-    ```bash
-    docker build -t anki-polymere-app .
-    ```
+## 📂 Architecture du Projet
 
-2.  **Lancer le conteneur :**
-    ```bash
-    docker run -it --rm -v "$(pwd)/polymere_data.json:/app/polymere_data.json" anki-polymere-app
-    ```
+Le projet suit une architecture React moderne et modulaire :
 
-   *L'argument `-v` est crucial pour que vos progrès soient sauvegardés sur votre ordinateur et non perdus à la fermeture du conteneur.*
+```
+src/
+├── components/     # Composants UI réutilisables (Flashcard, Boutons...)
+├── contexts/       # Gestion d'état global (DeckContext)
+├── pages/          # Vues principales (Home, StudySession)
+├── utils/          # Logique métier pure
+│   ├── scheduler.js  # Algorithme de répétition espacée (SM-2 modifié)
+│   ├── csvParser.js  # Moteur d'import et génération de cartes
+│   └── deckManager.js # Couche de persistence (localStorage)
+└── App.jsx         # Routeur et point d'entrée
+```
+
+## 📝 Format CSV Supporté
+
+Pour importer vos propres listes, utilisez le format CSV suivant (séparateur `;`) :
+
+```csv
+Word;French Translation;English Definition;Example Sentence
+Epiphany;Épiphanie;A moment of sudden revelation;After days of struggle, she had an epiphany.
+```
+
+## 🧠 L'Algorithme de Révision
+
+Contrairement aux applications classiques (Anki) qui espacent sur des mois, **FlashTOEFL** est agressif :
+- **Again** : Révérification dans **1 minute**.
+- **Hard** : Révérification dans **10 minutes**.
+- **Good** : Révérification dans **4 heures** (permet plusieurs révisions par jour).
+- **Easy** : Révérification dans **3 jours**.
+
+---
+*Développé pour réussir.*
