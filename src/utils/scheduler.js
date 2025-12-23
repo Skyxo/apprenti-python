@@ -10,7 +10,7 @@
 const INTERVALS = {
     AGAIN: 1,       // 1 minute
     HARD: 10,       // 10 minutes
-    GOOD_LEARNING: 60 * 4, // 4 hours
+    GOOD_LEARNING: 10,     // 10 minutes (Modified: Reappear in session)
     GOOD_REVIEW: 60 * 24,  // 1 day
     EASY: 60 * 24 * 3,     // 3 days
 };
