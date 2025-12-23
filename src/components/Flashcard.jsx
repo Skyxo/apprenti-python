@@ -32,9 +32,7 @@ export default function Flashcard({ card, onRate }) {
                 </AnimatePresence>
             </div>
 
-            <div className="mt-6 text-center text-slate-400 text-sm font-medium animate-pulse">
-                Swipe Right if you know it • Swipe Left if you don't
-            </div>
+            {/* Helper Text Removed */}
         </div>
     );
 }
@@ -184,8 +182,12 @@ function SwipeableCard({ card, onRate, isFlipped, setIsFlipped, showHint, setSho
                                 className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm text-left w-full"
                             >
                                 {card.definition && <p className="mb-1"><span className="font-bold text-slate-400">Def:</span> {card.definition}</p>}
-                                {card.type === 'translation' && card.example && (
-                                    <p className="italic text-slate-500 mt-2">"{card.example}"</p>
+
+                                {/* Show Example/Context for Translation AND Definition modes */}
+                                {card.example && (
+                                    <p className="italic text-slate-500 mt-2">
+                                        "{card.example.replace(new RegExp(card.answer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '_______')}"
+                                    </p>
                                 )}
                             </motion.div>
                         )}

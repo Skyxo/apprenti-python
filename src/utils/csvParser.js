@@ -10,16 +10,13 @@ import Papa from 'papaparse';
 export async function parseAndGenerateCards(csvContent, deckId) {
     return new Promise((resolve, reject) => {
         Papa.parse(csvContent, {
-            header: true, // We assume headers based on user input
+            header: true,
             delimiter: ";", // User specified semicolon
             skipEmptyLines: true,
             complete: (results) => {
                 const cards = [];
 
                 results.data.forEach((row, index) => {
-                    // Normalize keys (trim spaces, lowercase for matching? No, sensitive)
-                    // User Keys: Word;French Translation;English Definition;Example Sentence
-
                     // Let's find keys flexibly
                     const findKey = (query) => Object.keys(row).find(k => k.toLowerCase().includes(query.toLowerCase()));
 
@@ -35,71 +32,59 @@ export async function parseAndGenerateCards(csvContent, deckId) {
 
                     if (!word) return;
 
-                    const baseInfo = {
+                    // Create Master Card with variations
+                    const baseCard = {
+                        id: crypto.randomUUID(),
                         deckId,
                         importedAt: new Date().toISOString(),
-                        // Common fields stored for reference
+
+                        // Core Content
                         term: word,
                         definition,
                         translation: french,
                         example,
 
-                        // Scheduler init
+                        // Scheduler
                         interval: 0,
-                        dueDate: new Date().toISOString(), // Due immediately
+                        dueDate: new Date().toISOString(),
                         state: 'new',
+
+                        // VARIATIONS CONTAINER
+                        variations: {}
                     };
 
-                    // 1. CLOZE CARD (Best one)
+                    // 1. CLOZE VARIATION
                     if (example) {
-                        // Create cloze by replacing word (case insensitive) with _______
-                        // Escape regex chars in word
                         const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const clozeSentence = example.replace(new RegExp(escapedWord, 'gi'), '_______');
-                        cards.push({
-                            ...baseInfo,
-                            id: crypto.randomUUID(),
+                        baseCard.variations.cloze = {
                             type: 'cloze',
                             question: clozeSentence,
-                            answer: word,
-                            hint: definition || french // Hint if they are stuck
-                        });
-                    } else {
-                        // Fallback if no example: just Definition -> Word
-                        if (definition) {
-                            cards.push({
-                                ...baseInfo,
-                                id: crypto.randomUUID(),
-                                type: 'definition_fallback',
-                                question: definition,
-                                answer: word,
-                                hint: french
-                            });
-                        }
+                            answer: word
+                        };
                     }
 
-                    // 2. DEFINITION CARD (English -> Word)
+                    // 2. DEFINITION VARIATION
                     if (definition) {
-                        cards.push({
-                            ...baseInfo,
-                            id: crypto.randomUUID(),
+                        baseCard.variations.definition = {
                             type: 'definition',
                             question: definition,
-                            answer: word,
-                            hint: french
-                        });
+                            answer: word
+                        };
                     }
 
-                    // 3. TRANSLATION CARD (French -> Word)
+                    // 3. TRANSLATION VARIATION
                     if (french) {
-                        cards.push({
-                            ...baseInfo,
-                            id: crypto.randomUUID(),
+                        baseCard.variations.translation = {
                             type: 'translation',
                             question: french,
-                            answer: word,
-                            hint: definition
-                        });
+                            answer: word
+                        };
+                    }
+
+                    // Only add if at least one variation exists
+                    if (Object.keys(baseCard.variations).length > 0) {
+                        cards.push(baseCard);
                     }
                 });
 

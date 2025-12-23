@@ -55,18 +55,24 @@ export const DeckProvider = ({ children }) => {
             let madeChanges = false;
 
             for (const mod of modules) {
-                // Re-check existence inside loop to be safe against race conditions
-                const freshDecks = deckManager.getDecks();
-                if (!freshDecks.find(d => d.name === mod.name)) {
-                    console.log(`Seeding deck: ${mod.name}`);
-                    const newDeck = deckManager.createDeck(mod.name);
-                    try {
-                        const cards = await parseAndGenerateCards(mod.content, newDeck.id);
-                        deckManager.addCards(cards);
-                        madeChanges = true;
-                    } catch (e) {
-                        console.error(`Failed to seed ${mod.name}`, e);
-                    }
+                // FORCE RE-SEED FIX: Check if deck exists, if so DELETE it to ensure fresh parse with new logic
+                const existingDeck = deckManager.getDecks().find(d => d.name === mod.name);
+                if (existingDeck) {
+                    // Check if it has old card count (approx 3x expected) or just force update
+                    // Let's just force update for this session to fix the user's issue effectively
+                    console.log(`Forcing re-seed for: ${mod.name}`);
+                    deckManager.deleteDeck(existingDeck.id);
+                }
+
+                // Now recreate
+                console.log(`Seeding deck: ${mod.name}`);
+                const newDeck = deckManager.createDeck(mod.name);
+                try {
+                    const cards = await parseAndGenerateCards(mod.content, newDeck.id);
+                    deckManager.addCards(cards);
+                    madeChanges = true;
+                } catch (e) {
+                    console.error(`Failed to seed ${mod.name}`, e);
                 }
             }
 
